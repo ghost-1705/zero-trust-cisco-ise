@@ -1,0 +1,56 @@
+---
+- name: Deploy Zero Trust 802.1X & RADIUS CoA Configuration
+  hosts: switches
+  gather_facts: no
+
+  tasks:
+    - name: Configure Global AAA & 802.1X System Controls
+      cisco.ios.ios_config:
+        lines:
+          - aaa new-model
+          - dot1x system-auth-control
+          - aaa authentication dot1x default group ISE-RADIUS-SERVERS
+          - aaa authorization network default group ISE-RADIUS-SERVERS
+          - aaa accounting dot1x default start-stop group ISE-RADIUS-SERVERS
+          - ip radius source-interface Vlan100
+
+    - name: Configure Cisco ISE RADIUS Server Group
+      cisco.ios.ios_config:
+        parents: aaa group server radius ISE-RADIUS-SERVERS
+        lines:
+          - server name ISE-PRIMARY
+          - server name ISE-SECONDARY
+          - deadtime 5
+
+    - name: Configure Dynamic Authorization (RFC 5176 CoA)
+      cisco.ios.ios_config:
+        parents: aaa server radius dynamic-author
+        lines:
+          - "client {{ ise_primary_ip }} server-key {{ radius_secret }}"
+          - "client {{ ise_secondary_ip }} server-key {{ radius_secret }}"
+          - "port {{ coa_port }}"
+          - auth-type any
+
+    - name: Configure Access Interfaces for Multi-Auth 802.1X and MAB
+      cisco.ios.ios_config:
+        parents: "interface range GigabitEthernet0/1 - 4"
+        lines:
+          - switchport mode access
+          - switchport access vlan {{ vlan_employee }}
+          - authentication order dot1x mab
+          - authentication priority dot1x mab
+          - authentication port-control auto
+          - authentication host-mode multi-auth
+          - dot1x pae authenticator
+          - dot1x timeout tx-period 5
+          - spanning-tree portfast
+          - spanning-tree bpduguard enable
+          - authentication periodic
+          - authentication timer reauthenticate 3600
+          - authentication event fail action authorize vlan {{ vlan_quarantine }}
+          - authentication event server dead action authorize vlan {{ vlan_employee }}
+
+    - name: Save Running Configuration to Startup
+      cisco.ios.ios_command:
+        commands:
+          - write memory

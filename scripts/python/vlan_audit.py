@@ -20,7 +20,8 @@ Output:
 Requirements:
     pip install netmiko tabulate pandas
 
-Author : Network Lab Team
+Author : Aswin (ghost-1705)
+Contact: aswincp1705@gmail.com
 Date   : 2024
 """
 
@@ -36,12 +37,20 @@ from pathlib import Path
 
 try:
     import pandas as pd
+except ImportError:
+    pd = None
+
+try:
     from netmiko import ConnectHandler, NetmikoTimeoutException, NetmikoAuthenticationException
+except ImportError:
+    ConnectHandler = None
+    NetmikoTimeoutException = Exception
+    NetmikoAuthenticationException = Exception
+
+try:
     from tabulate import tabulate
-except ImportError as e:
-    print(f"[ERROR] Missing dependency: {e}")
-    print("Install with: pip install netmiko tabulate pandas")
-    sys.exit(1)
+except ImportError:
+    tabulate = None
 
 # ---------------------------------------------------------------------------
 # CONFIGURATION
@@ -119,7 +128,7 @@ def parse_auth_sessions(raw_output: str, switch_name: str) -> list:
         r"[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2})\s+"
         r"(?P<method>\S+)\s+"
         r"(?P<domain>\S+)\s+"
-        r"(?P<status>Auth|Unauth|Running|Failed|NoResp|Authz\s+Success|Authz\s+Failed)\s*"
+        r"(?P<status>Authz\s+Success|Authz\s+Failed|Auth|Unauth|Running|Failed|NoResp)\s*"
         r"(?P<fg>\S*)\s*",
         re.IGNORECASE
     )
@@ -180,12 +189,12 @@ def parse_session_detail(detail_output: str) -> dict:
     patterns = {
         "username": r"User-Name\s*:\s*(.+)",
         "ipv4_address": r"IPv4\s+Address\s*:\s*(\d+\.\d+\.\d+\.\d+)",
-        "vlan": r"Vlan\s+Policy\s*:\s*(\d+)",
+        "vlan": r"Vlan\s*(?:Policy|Group)?\s*:\s*(\d+)",
         "auth_method": r"Method\s*:\s*(\w+)",
-        "acl": r"ACS\s+ACL\s*:\s*(\S+)",
+        "acl": r"(?:ACS\s+ACL|dACL)\s*:\s*(.+)",
         "url_redirect": r"URL\s+Redirect\s*:\s*(\S+)",
         "posture_status": r"Posture\s+Status\s*:\s*(\S+)",
-        "session_id": r"Audit\s+Session\s+ID\s*:\s*(\S+)",
+        "session_id": r"(?:Audit\s+Session\s+ID|Common\s+Session\s+ID)\s*:\s*(\S+)",
         "handle": r"Handle\s*:\s*(\S+)",
         "current_policy": r"Current\s+Policy\s*:\s*(.+)",
         "domain": r"Domain\s*:\s*(\S+)"

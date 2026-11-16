@@ -1,0 +1,15 @@
+---
+# Global AAA & Cisco ISE Radius Parameters
+ise_primary_ip: "192.168.1.100"
+ise_secondary_ip: "192.168.1.101"
+radius_secret: "ChangeMe_SharedSecret!"
+coa_port: 3799
+
+# VLAN Mapping
+vlan_employee: 10
+vlan_contractor: 20
+vlan_iot: 30
+vlan_guest: 40
+vlan_voip: 50
+vlan_quarantine: 99
+vlan_mgmt: 100

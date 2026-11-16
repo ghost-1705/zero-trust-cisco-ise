@@ -13,7 +13,8 @@ Provides functions to interact with Cisco ISE via its REST API:
 Requirements:
   pip install requests
 
-Author : Network Lab Team
+Author : Aswin (ghost-1705)
+Contact: aswincp1705@gmail.com
 Date   : 2024
 ISE API Docs: https://developer.cisco.com/docs/identity-services-engine/
 """

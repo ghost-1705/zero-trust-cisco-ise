@@ -127,6 +127,7 @@ $RECYCLE.BIN/
 *.pcap
 *.pcapng
 *.cap
+!captures/*.pcap
 
 # =============================================================================
 # Cisco Configs with Sensitive Data
