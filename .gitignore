@@ -1,0 +1,180 @@
+# .gitignore — Zero Trust ISE Lab (Network/Python Project)
+
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env/
+virtualenv/
+
+# =============================================================================
+# Credentials and Secrets
+# =============================================================================
+# NEVER commit credentials — use environment variables or a secrets manager
+.env
+.env.local
+.env.production
+.env.staging
+.env.*
+secrets.yaml
+secrets.yml
+secrets.json
+credentials.json
+credentials.yaml
+*_credentials.*
+*_password.*
+*_secret.*
+*.pem
+*.key
+*.pfx
+*.p12
+*.crt
+# Exception: keep example/template files
+!*.example.env
+!*example_credentials*
+
+# =============================================================================
+# CSV / Report Output Files
+# =============================================================================
+# Audit reports are generated at runtime — don't commit them
+audit_report_*.csv
+vlan_audit_*.csv
+session_report_*.csv
+*.report.csv
+output/*.csv
+reports/*.csv
+
+# =============================================================================
+# Log Files
+# =============================================================================
+*.log
+*.log.*
+logs/
+vlan_audit.log
+ise_api.log
+netmiko.log
+*.out
+
+# =============================================================================
+# IDE and Editor Files
+# =============================================================================
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains (PyCharm, IntelliJ)
+.idea/
+*.iml
+*.iws
+
+# Vim
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+.directory
+*.bak
+
+# =============================================================================
+# Packet Captures
+# =============================================================================
+# Wireshark captures may contain sensitive network data
+*.pcap
+*.pcapng
+*.cap
+
+# =============================================================================
+# Cisco Configs with Sensitive Data
+# =============================================================================
+# If you have configs with real production IPs, passwords, or keys, exclude them
+# Uncomment the lines below as needed:
+# configs/switches/*-prod.cfg
+# configs/switches/*-live.cfg
+
+# =============================================================================
+# Jupyter Notebooks (checkpoints)
+# =============================================================================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# =============================================================================
+# Test / Temp Files
+# =============================================================================
+tmp/
+temp/
+scratch/
+*.tmp
+*.temp
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+
+# =============================================================================
+# Docker (if used for testing)
+# =============================================================================
+.docker/
+
+# =============================================================================
+# Terraform (if infrastructure as code is added)
+# =============================================================================
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# =============================================================================
+# Node.js (if any front-end tooling is added)
+# =============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
